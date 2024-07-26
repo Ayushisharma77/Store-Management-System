@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<style type="text/css">
+	.btn{
+		color: white;
+		background-color: black;
+	}
+	.btn1{
+		color: white;
+		background-color: black;
+		margin-left: 35px;
+		margin-right: 5px;
+		padding-left: 0px;
+	}
+	.btn2{
+		color: white;
+		background-color: black;
+		margin-right: 5px;
+		padding-left: 0px;
+	}
+	.table1{
+		
+		margin-bottom: 10px;
+	}
+	.td1{
+		
+		font-weight: bold;
+	    text-align: center;
+		background-color:lightpink;
+
+	}
+	.td2{
+		
+		font-weight: bold;
+        text-align: center;
+		background-color:lightgreen;
+}
+	
+   .th1{
+		background-color: purple;
+		color: white;
+        padding-left: 15px;
+		padding-right: 15px;
+	}
+
+</style>
+<body>
+<h1>Store Management System</h1>
+<button class='btn' onclick=prod()>Product</button>
+<button class='btn' onclick=order()>Enter an Order</button>
+<button class='btn' onclick=ordtab()>All Order</button>
+<div id ='students'></div>
+	<div id ='data'></div>
+	<div id ='stud'></div>
+<script>
+ 
+ const product = [
+				{"prodcode":"PEP122","prodname":"Pepsi","price":12,"category":"Food","offer":"10%"},
+				{"prodcode":"COK238","prodname":"Coke","price":15,"category":"Food","offer":"15%"},
+				{"prodcode":"MIR411","prodname":"Mirinda","price":30,"category":"Food","offer":"20%"},
+				{"prodcode":"RB0277","prodname":"Red Bull","price":80,"category":"Food","offer":"None"},
+				{"prodcode":"LUX831","prodname":"Lux","price":10,"category":"Soap","offer":"15%"},
+				{"prodcode":"DOV672","prodname":"Dove","price":25,"category":"Soap","offer":"20%"},
+				{"prodcode":"DET810","prodname":"Dettol","price":15,"category":"Soap","offer":"None"},
+				{"prodcode":"PAN590","prodname":"Pantene","price":60,"category":"Shampoo","offer":"None"},
+				{"prodcode":"SUN677","prodname":"Sunsilk","price":48,"category":"Shampoo","offer":"15%"},
+				{"prodcode":"GAR004","prodname":"Garnier","price":75,"category":"Shampoo","offer":"10%"}
+];
+
+
+
+	    function prod( ){
+	  	const arr1 = product.map(function(ele){
+	  
+			let str = '<tr>';
+			str+= '<td class=\''+check(ele)+'\'>'+ele.prodcode+'</td>';
+			str+= '<td class=\''+check(ele)+'\'>'+ele.prodname+'</td>';
+			str+= '<td class=\''+check(ele)+'\'>'+ele.price+'</td>';
+			str+= '<td class=\''+check(ele)+'\'>'+ele.category+'</td>';
+			str+= '<td class=\''+check(ele)+'\'>'+ele.offer+'</td>';
+			str+= '</tr>';
+			return str;		
+		});
+
+		let header ='<tr>';
+		header+= '<th class=\'th1\'onclick=\'sort(0)\'>Code</th>';
+		header+= '<th class=\'th1\'onclick=\'sort(1)\'>Name</th>';
+		header+= '<th class=\'th1\'onclick=\'sort(2)\'>Price</th>';
+		header+= '<th class=\'th1\'onclick=\'sort(4)\'>Category</th>';
+		header+= '<th class=\'th1\'onclick=\'sort(5)\'>Discount</th>';
+	
+		header+= '</tr>';
+	//	console.log("show function arr1",arr1);
+
+          let html ='<table>'+header+arr1.join(' ')+'</table>';
+
+		let element = document.getElementById("data");
+		element.innerHTML = html;
+		
+        }
+
+        function check(ele){
+        	let index = product.findIndex(function(val){
+        		//console.log(val.prodcode);
+        	return val.prodcode==ele.prodcode;
+        });
+        	//console.log(index);
+        	if(index==0){
+        		//console.log('even');
+        		return 'td2';
+
+        	}
+        	else if(index%2==0){
+        		//console.log('odd');
+        		return 'td2';
+        	}
+        	else{
+        		return 'td1';
+        	}
+        }
+
+         const Locations    = ['Sector	14A', 'Sector	15B','Sector	22', 'Pioneer	Chowk'];
+
+         const DeliverSlots = ['Befor 10AM','10AM-12PM','12PM-2PM','2PM-4PM','4PM-6PM','After 6PM'];
+
+         const ord = ["PEP122","COK238","MIR411","RB0277","LUX831","DOV672","DET810","PAN590","SUN677","GAR004"];
+
+         const quantity = [1,2,3,4,5,6,7,8,9,10];
+
+        function order(){
+        let str = 'Customer Name<input type="text" id="nam1">'+'<br/>';
+        str += 'Mobile Number<input type="text" id="mob1">'+'<br/>';
+        str += 'Location'+makeCodeDD("dd",Locations,'Choose location','')+'</br>';
+        str += 'Delivery Slots'+makeCodeDD("dd1",DeliverSlots,'Choose Delivery Slot','')+'</br>';
+        str += 'Add to Order'+makeCodeDD("dd2",ord,'Select Product','');
+        str += makeCodeDD("dd3",quantity,'Select Quantity','');
+        str += '<button class="btn" onclick=addtocart()>Add To Order</button>'+'</br>';
+        str += '<button class="btn1" onclick=addorder()>Order Complete</button>'+'<button class="btn2" onclick=cancel()>Cancel Order</button>'+'</br>';
+        let html = document.getElementById("data");
+		html.innerHTML = str;
+
+        }
+
+        function makeCodeDD(id,arr,first,selVal){
+	const arr1 = arr.map(function(opt){
+			if(opt==selVal)
+				return '<option selected>'+first+'</option>';
+			else
+           return '<option>'+opt+'</option>';
+		});
+	let header = '<option disabled>'+first+'</option>';
+	if(selVal=='')
+		header = '<option disabled selected>'+first+'</option>';
+	let s1 = '<select id =\''+id+'\'>'+header+arr1.join('')+'</select>';
+	return s1;
+	}
+
+	let cart =[];
+
+	function showCart(){
+        let cMap = cart.map(function(ele){
+           str = '<tr>';
+        str+= '<td class="td1">'+ele.code+'</td>';
+        str+= '<td class="td1">'+ele.name+'</td>';
+        str+= '<td class="td1">'+ele.price+'</td>';
+        str+= '<td class="td1">'+ele.quantity+'</td>';
+        str+= '<td class="td1">'+ele.Discount+'</td>';
+        str+= '<td class="td1">'+ele.netamount+'</td>';
+        
+       str+= '<td class ="td1"><button class="btn" onclick=remove("'+ele.code+'")>Remove</button></td>';
+    
+        str+= '</tr>';
+        return str;
+ 
+
+
+    });
+    let header = '<tr>';
+
+    header+= '<th class="th1">Code</th>';
+    header+= '<th class="th1">Name</th>';
+    header+= '<th class="th1">price</th>';
+    header+= '<th class="th1">Quantity</th>';
+    header+= '<th class="th1">Discount</th>';
+    header+= '<th class="th1">Net Amount</th>';
+    header+= '<th class="th1"></th>';
+    
+
+    header+= '</tr>';
+    
+        
+  
+   let html = '<table class="table1">'+header+cMap.join('')+'</table>';
+let ht = document.getElementById("stud");
+		ht.innerHTML = html;
+    
+//return html;
+    }
+
+    function addtocart(prod){
+     let q='';
+     let amt ='';
+     let na='';
+     let d='';
+     // prodd= productcode,quandd= quantity 
+     let prodd = document.getElementById('dd2');
+     let quandd = document.getElementById('dd3');
+     let q1 = quandd.value;
+
+        //console.log(quandd.value);
+        let p2 = cart.find(function(ele){
+        // console.log(ele.code);
+        return ele.code==prodd.value;
+       }); 
+      //console.log('p2',p2);
+    if(p2){
+    	//console.log('p2.quantity',p2.quantity);
+      //	console.log('q1',q1);
+         if(p2.code==prodd.value){
+     p2.quantity = (+p2.quantity)+(+q1);
+    // console.log('q2.quantity',p2.quantity);
+     amt = p2.quantity*p2.price;
+    //  console.log('amt',amt);
+    //  console.log(p2.Discount);
+      d = p2.Discount=='None'?0:amt*(parseFloat(p2.Discount)/100);
+    //  console.log('d',d);
+       p2.netamount=amt-d;
+    //   console.log('p2.netamount',p2.netamount);
+   }
+}          
+            else{
+                let prod1 = product.find(function(ele){
+                	if(ele.prodcode==prodd.value){
+                	   q = quandd.value
+                       // console.log('q',q);
+                       
+                        amt= q*ele.price;
+                       // console.log('amt',amt);
+                       // console.log(ele.offer);
+
+                        d = ele.offer=='None'?0:amt*(parseFloat(ele.offer)/100);
+
+                       // console.log('d',d);
+                        na = amt-d;
+                    }
+                    return ele.prodcode==prodd.value;
+                });           
+                  
+  let item ={code:prodd.value,name:prod1.prodname,price:prod1.price,quantity:q,Discount:prod1.offer,netamount:na};
+        cart.push(item);
+    }      
+           
+             console.log("cart",cart);
+             showCart();
+    }
+    function remove(prod){
+        let index = cart.findIndex(function(ele){
+            return ele.code==prod;
+        });
+            cart.splice(index,1);
+        if(index>=0)
+        return showCart();
+    }
+
+    function cancel(){
+    	let index = cart.findIndex(function(ele){
+    		return ele.code;
+    	});
+    	//console.log(index);
+    	cart.splice(index);
+    	order();
+    	return showCart();
+
+    }
+
+   let arr =[];
+   
+  
+  let item =[{}];
+  
+
+    function addorder(){
+    
+    
+    	
+    	let name = document.getElementById('nam1');
+    	let mobile = document.getElementById('mob1');
+    	let location = document.getElementById('dd');
+    	let slot = document.getElementById('dd1');
+        let prodcode= document.getElementById('dd2');
+        let quandd = document.getElementById('dd3');
+
+        let cart1 = cart.find(function(ele){
+            return ele.code==prodcode.value;
+        });
+              
+
+
+      let countquantity = cart.reduce(function(acc,curr){
+            return (+acc)+(+curr.quantity);
+        },0);
+        let netamount = cart.reduce(function(acc,curr){
+            return acc+curr.netamount;
+        },0);
+
+ 
+    let html = 'customer Name:'+name.value+',';
+    html+= 'Mobile:'+mobile.value+',';
+    html+='Location:'+location.value+',';
+    html+= 'Delivery Slot:'+slot.value+''+'</br>';
+    
+     html+= '<p>Order Value : '+netamount+', Number of items: '+countquantity+'</p>'
+
+    
+
+          if(name.value==""||name.value.length<5){   
+          	alert("Name should be minimum 5 chars");
+          }
+
+ else if( mobile.value=="" || mobile.value.length<10 ){  
+ 	console.log( "ml",mobile.value.length);
+ 	alert("Mobile number should have 10 chars") 
+ 	}
+  else if(isNaN(mobile.value)){  
+  	alert('Mobile number should have digits only');
+
+  }
+ 
+else if(location.value=="Choose location"){  
+ 	alert("Select the location");
+ 	
+ }
+ else if(slot.value=="Choose Delivery Slot"){
+ 	alert("Select the slot");
+ 
+ }
+  
+else{
+
+
+       let arr = {custname:name.value,mobile:mobile.value,location:location.value,slot:slot.value, value:netamount,items:[]};
+
+
+     let cart2 = cart.map(function(ele){
+
+            
+            console.log(ele.code);
+    
+            item = {prodcode:ele.code,quantity:ele.quantity};
+            arr.items.push(item);
+         //  arr1.push(item);
+            item={};
+               
+   
+        
+        });
+     
+     console.log("arr",arr);
+    console.log("item",item);
+      
+     Orders.unshift(arr);
+        console.log(Orders);
+        ordtab();
+}
+
+    }
+
+   const Orders =[
+{"custname":"Jack Smith","mobile":"425361434","location":"Sector14","slot":"12PM-2PM","value":72.6,"items":[{"prodcode":"PEP122","quantity":2},{"prodcode":"COK238","quantity":4
+}]},
+{"custname":"MaryGomes","mobile":"723476123","location":"Sector 22","slot":"4PM-6PM","value":130.60,"items":[{"prodcode":"SUN677","quantity":2},{"prodcode":"LUX831","quantity":4},{"prodcode":"DET810","quantity":1}]},
+{"custname":"Tim May","mobile":"835099614","location":"Pioneer Chowk","slot":"Before 10AM","value":705,"items":[{"prodcode":"GAR004","quantity":6},{"prodcode":"RB0277","quantity":
+3},{"prodcode":"MIR411","quantity":2}]}
+];
+
+console.log(Orders);
+    function ordtab(){
+
+        
+let cMap = Orders.map(function(ele){
+    let amt = '';
+    let q='';
+    let d='';
+    let na='';
+                  let countquantity = ele.items.reduce(function(acc,curr){
+                  //   let countquantity = arr1.reduce(function(acc,curr){
+            // console.log("cq",curr.items.quantity);
+             return (+acc)+(+curr.quantity);
+    },0);
+
+let st = '<p>custname:'+ele.custname+',Mobile:'+ele.mobile+',Location:'+ele.location+',Slot:'+ele.slot+'</p>'; 
+  
+           st +='<p>order value:'+ele.value+',Number of items:'+countquantity+'</p>';
+              
+                let omap = ele.items.map(function(val){
+              //  let omap = arr1.map(function(val){
+        
+                   // console.log("items",ele.items);
+            
+            let p = product.find(function(ele1){
+            
+                        if(ele1.prodcode==val.prodcode){
+                            return ele1.prodcode;
+                       }
+                
+                     });
+                     
+             
+        console.log("p",p);
+
+        
+        let prod1 = product.find(function(ele){
+                    if(ele.prodcode==val.prodcode){
+                    
+                    
+                       
+                        amt= val.quantity*ele.price;
+                        console.log('amt',amt);
+                        console.log(ele.offer);
+
+                        d = ele.offer=='None'?0:amt*(parseFloat(ele.offer)/100);
+
+                       // console.log('d',d);
+                        na = amt-d;
+                    }
+                    return ele.prodcode==val.prodcode;
+                });      
+
+              
+           
+            
+           let str = '<tr>';
+
+        str+= '<td class="td1">'+p.prodcode+'</td>';
+        str+= '<td class="td1">'+p.prodname+'</td>';
+        str+= '<td class="td1">'+p.price+'</td>';
+        str+= '<td class="td1">'+val.quantity+'</td>';
+        str+= '<td class="td1">'+p.offer+'</td>';
+        str+= '<td class="td1">'+na+'</td>';
+        str+= '</tr>';
+      // console.log("str",str);
+   
+        return str; 
+  //}
+
+  
+  
+});
+              
+              
+                let header = '<tr>';
+    header+= '<th class="th1">Code</th>';
+    header+= '<th class="th1">Name</th>';
+    header+= '<th class="th1">price</th>';
+    header+= '<th class="th1">Quantity</th>';
+    header+= '<th class="th1">Discount</th>';
+    header+= '<th class="th1">Net Amount</th>';
+    header+= '</tr>'; 
+        
+        return '<table class="table1">'+st+header+omap+'</table>';
+        
+       });
+
+     // console.log("orders",Orders);
+
+   //let html = '<table class="table1">'+cMap.join('')+'</table>';
+  let html = cMap.join('');
+   let ht1 = document.getElementById("data");
+		ht1.innerHTML =  html;
+   
+
+
+    }
+
+    
+
+
+
+	</script>
+</body>
+</html>
